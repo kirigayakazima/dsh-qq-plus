@@ -8,13 +8,18 @@ import path from 'node:path'
 export function findQqbotPkgDir() {
   const candidates = [
     process.env.QQBOT_PKG,
+    path.join(os.homedir(), '.dsh', 'profiles', 'web', 'node_modules', '@tencent-connect', 'dsh-qqbot'),
+    path.join(os.homedir(), '.dsh', 'plugin-src', '@tencent-connect', 'dsh-qqbot'),
     path.join(os.homedir(), '.dsh', 'profiles', 'desktop', 'node_modules', '@tencent-connect', 'dsh-qqbot'),
     path.join(os.homedir(), '.dsh', 'node_modules', '@tencent-connect', 'dsh-qqbot'),
     path.join(process.cwd(), 'node_modules', '@tencent-connect', 'dsh-qqbot'),
   ].filter(Boolean)
 
   for (const dir of candidates) {
-    if (fs.existsSync(path.join(dir, 'dist', 'gateway', 'bootstrap.js'))) {
+    if (
+      fs.existsSync(path.join(dir, 'lib', 'gateway', 'bootstrap.js')) ||
+      fs.existsSync(path.join(dir, 'dist', 'gateway', 'bootstrap.js'))
+    ) {
       return dir
     }
   }
@@ -26,8 +31,9 @@ export function patchQqbot(pkgDir) {
     throw new Error(`找不到 @tencent-connect/dsh-qqbot 插件安装目录：${pkgDir}`)
   }
 
-  const bootstrapFile = path.join(pkgDir, 'dist', 'gateway', 'bootstrap.js')
-  const mwFile = path.join(pkgDir, 'dist', 'gateway', 'middleware-setup.js')
+  const sub = fs.existsSync(path.join(pkgDir, 'lib', 'gateway', 'bootstrap.js')) ? 'lib' : 'dist'
+  const bootstrapFile = path.join(pkgDir, sub, 'gateway', 'bootstrap.js')
+  const mwFile = path.join(pkgDir, sub, 'gateway', 'middleware-setup.js')
 
   const results = {
     bootstrap: 'unchanged',
