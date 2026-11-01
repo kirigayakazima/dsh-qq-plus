@@ -112,3 +112,20 @@ test('Heart 情绪联动打字节奏计算（computeHeartCadence）', () => {
   assert.ok(excited.delayMs < base.delayMs, '兴奋时打字速度应加快')
   assert.ok(excited.targetChars < base.targetChars, '兴奋时单段期望更短小轻快')
 })
+
+test('出站切分参数平铺与嵌套双兼容支持', () => {
+  // 1. 顶层平铺配置 (如直接在 config 根级写 minChars: 45)
+  const flatRes = resolvePersonaConfig({}, { minChars: 45, targetChars: 30, delayMs: 300 })
+  assert.equal(flatRes.split.minChars, 45)
+  assert.equal(flatRes.split.targetChars, 30)
+  assert.equal(flatRes.split.delayMs, 300)
+
+  // 2. 标准嵌套配置 (config.split.*)
+  const nestedRes = resolvePersonaConfig({}, { split: { minChars: 55, targetChars: 40 } })
+  assert.equal(nestedRes.split.minChars, 55)
+  assert.equal(nestedRes.split.targetChars, 40)
+
+  // 3. 嵌套配置优先级高于顶层平铺
+  const overrideRes = resolvePersonaConfig({}, { minChars: 45, split: { minChars: 65 } })
+  assert.equal(overrideRes.split.minChars, 65)
+})
