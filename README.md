@@ -1,3 +1,10 @@
+> [!IMPORTANT]
+> **此仓库已正式合并入统一伴侣主仓 [LucidHeart](https://github.com/kirigayakazima/LucidHeart)。**  
+> 
+> 本仓库现已进入只读归档状态。后续最新代码与维护均在主仓的 [`packages/qq-plus`](https://github.com/kirigayakazima/LucidHeart/tree/main/packages/qq-plus) 目录下进行。
+
+---
+
 # @dsh/qq-plus (QQ 机器人增强插件)
 
 > **当前版本**: `0.2.1`  
